@@ -18,7 +18,8 @@ endif()
 find_program(MAKE_PROGRAM make)
 
 set(BUILD_ICU ON)
-set(ICU_CROSS_ARCH x86_64-w64-mingw32)
+#set(ICU_CROSS_ARCH x86_64-w64-mingw32)
+set(ICU_CROSS_ARCH aarch64-linux-android)
 
 if (NOT BUILD_ICU OR BUILD_ICU AND ICU_ROOT_DIR)
     # try to find icu
@@ -48,11 +49,37 @@ if (NOT ICU_FOUND AND BUILD_ICU)
     )
 
     if (ICU_CROSS_ARCH)
+        # cross cflags
+        if (ANDROID)
+            # copy over both sysroots to a common sysroot (workaround OpenSSL failing without one single sysroot)
+            file(COPY ${ANDROID_SYSTEM_LIBRARY_PATH}/usr DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/sysroot/)
+            file(COPY ${CMAKE_SYSROOT}/usr/include DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/sysroot/usr/)
+
+            # for c++ standard lib
+            set(CROSS_INCLUDES "")
+            foreach(INC ${CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES})
+                set(CROSS_INCLUDES "${CROSS_INCLUDES} -I${INC}")
+            endforeach()
+
+            set(CROSS_CFLAGS "${CMAKE_C_FLAGS} -target ${CMAKE_C_COMPILER_TARGET}")
+            set(CROSS_CXXFLAGS "${CMAKE_CXX_FLAGS} ${CROSS_INCLUDES} -target ${CMAKE_CXX_COMPILER_TARGET}")
+            set(CROSS_CC "${CMAKE_C_COMPILER} ${CMAKE_C_COMPILE_OPTIONS_EXTERNAL_TOOLCHAIN}${CMAKE_C_COMPILER_EXTERNAL_TOOLCHAIN} --sysroot=${CMAKE_CURRENT_BINARY_DIR}/sysroot")
+            set(CROSS_CXX "${CMAKE_CXX_COMPILER} ${CMAKE_CXX_COMPILE_OPTIONS_EXTERNAL_TOOLCHAIN}${CMAKE_CXX_COMPILER_EXTERNAL_TOOLCHAIN} --sysroot=${CMAKE_CURRENT_BINARY_DIR}/sysroot")
+            set(CROSS_LDFLAGS "${CMAKE_MODULE_LINKER_FLAGS} ") # TODO: add CMAKE_CXX_STANDARD_LIBRARIES
+        else()
+            set(CROSS_CFLAGS "${CMAKE_C_FLAGS}")
+            set(CROSS_CXXFLAGS "${CMAKE_CXX_FLAGS}")
+            set(CROSS_CC "${CMAKE_C_COMPILER}")
+            set(CROSS_CXX "${CMAKE_CXX_COMPILER}")
+            set(CROSS_LDFLAGS "${CMAKE_MODULE_LINKER_FLAGS}")
+        endif()
+
         set(CROSS_ENV_CMAKE ${CMAKE_COMMAND} -E env
-                CC=${CMAKE_C_COMPILER}
-                CXX=${CMAKE_CXX_COMPILER}
-                CFLAGS=${CMAKE_C_FLAGS}
-                CXXFLAGS=${CMAKE_CXX_FLAGS}
+                CC=${CROSS_CC}
+                CXX=${CROSS_CXX}
+                CFLAGS=${CROSS_CFLAGS}
+                CXXFLAGS=${CROSS_CXXFLAGS}
+                LDFLAGS=${CROSS_LDFLAGS}
         )
 
         ExternalProject_Add(
