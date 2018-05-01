@@ -66,7 +66,12 @@ if (NOT ICU_FOUND AND BUILD_ICU)
             string(REPLACE "\" \"" ";" ANDROID_CXX_STANDARD_LIBRARIES ${ANDROID_CXX_STANDARD_LIBRARIES})
             string(REPLACE "\"" "" ANDROID_CXX_STANDARD_LIBRARIES ${ANDROID_CXX_STANDARD_LIBRARIES})
             foreach(LIB ${ANDROID_CXX_STANDARD_LIBRARIES})
-                set(CROSS_LIBS "${CROSS_LIBS} -l:${LIB}")
+                get_filename_component(LIB_PATH ${LIB} DIRECTORY)
+                get_filename_component(LIB_NAME ${LIB} NAME_WE)
+                # remove starting "lib"
+                string(REGEX REPLACE "^lib" "" LIB_NAME ${LIB_NAME})
+                
+                set(CROSS_LIBS "${CROSS_LIBS} -L${LIB_PATH} -l${LIB_NAME}")
             endforeach()
 
             set(CROSS_CFLAGS "${CMAKE_C_FLAGS} -target ${CMAKE_C_COMPILER_TARGET}")
@@ -74,6 +79,9 @@ if (NOT ICU_FOUND AND BUILD_ICU)
             set(CROSS_CC "${CMAKE_C_COMPILER} ${CMAKE_C_COMPILE_OPTIONS_EXTERNAL_TOOLCHAIN}${CMAKE_C_COMPILER_EXTERNAL_TOOLCHAIN} --sysroot=${CMAKE_CURRENT_BINARY_DIR}/sysroot")
             set(CROSS_CXX "${CMAKE_CXX_COMPILER} ${CMAKE_CXX_COMPILE_OPTIONS_EXTERNAL_TOOLCHAIN}${CMAKE_CXX_COMPILER_EXTERNAL_TOOLCHAIN} --sysroot=${CMAKE_CURRENT_BINARY_DIR}/sysroot")
             set(CROSS_LDFLAGS "${CMAKE_MODULE_LINKER_FLAGS} ${CROSS_LIBS}")
+            
+            # fix http://bugs.icu-project.org/trac/ticket/12854
+            set(CROSS_CXXFLAGS "${CROSS_CXXFLAGS} -DU_HAVE_XLOCALE_H=0")
         else()
             set(CROSS_CFLAGS "${CMAKE_C_FLAGS}")
             set(CROSS_CXXFLAGS "${CMAKE_CXX_FLAGS}")
