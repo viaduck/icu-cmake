@@ -1,3 +1,3 @@
 [submodule "cmake-modules"]
 	path = cmake-modules
-	url = git@gl.viaduck.org:viaduck/cmake-modules
+	url = ../../viaduck/cmake-modules
