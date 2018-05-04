@@ -83,7 +83,7 @@ if (NOT ICU_FOUND AND BUILD_ICU)
     if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/icu)
         # download and unpack if needed
         file(DOWNLOAD ${ICU_URL} ${CMAKE_CURRENT_BINARY_DIR}/icu_src.tgz SHOW_PROGRESS)
-        execute_process(COMMAND ${CMAKE_COMMAND} -E tar x icu_src.tgz)
+        execute_process(COMMAND ${CMAKE_COMMAND} -E tar x ${CMAKE_CURRENT_BINARY_DIR}/icu_src.tgz WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
     endif()
     
     # if we are actually building for host, use cmake params for it
