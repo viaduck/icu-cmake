@@ -4,6 +4,7 @@ stages:
     - build         # contains build and test and deploy
 
 variables:
+    GIT_SUBMODULE_STRATEGY: recursive
     ANDROID_PLATFORM: "android-26"
     ANDROID_NDK: "/android/ndk"
     
