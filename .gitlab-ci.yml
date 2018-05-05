@@ -34,7 +34,7 @@ android-arm64-v8a:
     script:
         - mkdir build-android-arm64-v8a
         - cd build-android-arm64-v8a
-        - cmake ../ -DBUILD_ICU=ON -DICU_CROSS_ARCH=aarch64-linux-android -DANDROID_PLATFORM=$ANDROID_PLATFORM -DANDROID_ABI=arm64-v8a -DANDROID_TOOLCHAIN=clang -DANDROID_STL=c++_static -DANDROID_NDK=$ANDROID_NDK -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake
+        - cmake ../ -DBUILD_ICU=ON -DICU_CROSS_ARCH=aarch64-linux-android -DANDROID_PLATFORM=$ANDROID_PLATFORM -DANDROID_ABI=arm64-v8a -DANDROID_TOOLCHAIN=clang -DANDROID_STL=c++_shared -DANDROID_NDK=$ANDROID_NDK -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake
         - make
     stage: build
     only:
@@ -45,7 +45,7 @@ android-armeabi-v7a:
     script:
         - mkdir build-android-armeabi-v7a
         - cd build-android-armeabi-v7a
-        - cmake ../ -DBUILD_ICU=ON -DICU_CROSS_ARCH=arm-linux-androideabi -DANDROID_PLATFORM=$ANDROID_PLATFORM -DANDROID_ABI=armeabi-v7a -DANDROID_TOOLCHAIN=clang -DANDROID_STL=c++_static -DANDROID_NDK=$ANDROID_NDK -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake
+        - cmake ../ -DBUILD_ICU=ON -DICU_CROSS_ARCH=arm-linux-androideabi -DANDROID_PLATFORM=$ANDROID_PLATFORM -DANDROID_ABI=armeabi-v7a -DANDROID_TOOLCHAIN=clang -DANDROID_STL=c++_shared -DANDROID_NDK=$ANDROID_NDK -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake
         - make
     stage: build
     only:
@@ -56,7 +56,7 @@ android-x86:
     script:
         - mkdir build-android-x86
         - cd build-android-x86
-        - cmake ../ -DBUILD_ICU=ON -DICU_CROSS_ARCH=i686-linux-android -DANDROID_PLATFORM=$ANDROID_PLATFORM -DANDROID_ABI=x86 -DANDROID_TOOLCHAIN=clang -DANDROID_STL=c++_static -DANDROID_NDK=$ANDROID_NDK -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake
+        - cmake ../ -DBUILD_ICU=ON -DICU_CROSS_ARCH=i686-linux-android -DANDROID_PLATFORM=$ANDROID_PLATFORM -DANDROID_ABI=x86 -DANDROID_TOOLCHAIN=clang -DANDROID_STL=c++_shared -DANDROID_NDK=$ANDROID_NDK -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake
         - make
     stage: build
     only:
@@ -67,7 +67,7 @@ android-x86_64:
     script:
         - mkdir build-android-x86_64
         - cd build-android-x86_64
-        - cmake ../ -DBUILD_ICU=ON -DICU_CROSS_ARCH=x86_64-linux-android -DANDROID_PLATFORM=$ANDROID_PLATFORM -DANDROID_ABI=x86_64 -DANDROID_TOOLCHAIN=clang -DANDROID_STL=c++_static -DANDROID_NDK=$ANDROID_NDK -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake
+        - cmake ../ -DBUILD_ICU=ON -DICU_CROSS_ARCH=x86_64-linux-android -DANDROID_PLATFORM=$ANDROID_PLATFORM -DANDROID_ABI=x86_64 -DANDROID_TOOLCHAIN=clang -DANDROID_STL=c++_shared -DANDROID_NDK=$ANDROID_NDK -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake
         - make
     stage: build
     only:
