@@ -14,7 +14,7 @@ build:linux-x86_64:
     script:
         - mkdir build-linux-x86_64
         - cd build-linux-x86_64
-        - cmake ../ -DBUILD_ICU=ON
+        - cmake ../ -DBUILD_ICU=ON -DICU_BUILD_VERSION=$ICU_BUILD_VERSION
         - make
         - ../scripts/commit_result.sh x86_64-linux icu_host
     stage: build
