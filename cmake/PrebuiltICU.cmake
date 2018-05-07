@@ -49,7 +49,8 @@ ExternalProject_Add(icu_pre
         CONFIGURE_COMMAND ""
         BUILD_COMMAND ""
         INSTALL_COMMAND ""
+        COMMAND ${CMAKE_COMMAND} -G ${CMAKE_GENERATOR} ${CMAKE_BINARY_DIR}
         TEST_COMMAND ""
 )
 add_dependencies(icu icu_pre)
-set(ICU_ROOT_DIR ${CMAKE_CURRENT_BINARY_DIR}/icu_pre-prefix/src/icu_pre/ CACHE INTERNAL "" FORCE)
+set(ICU_ROOT_DIR ${CMAKE_CURRENT_BINARY_DIR}/icu_pre-prefix/src/icu_pre/${PREBUILT_BRANCH} CACHE INTERNAL "" FORCE)

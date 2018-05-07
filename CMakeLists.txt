@@ -63,9 +63,7 @@ else()
         endif()
         
         if (ICU_FOUND)
-            message(STATUS "Found compiled ICU. Remove to recompile.")
-        else()
-            message(STATUS "Could NOT find compiled ICU. Compiling.")
+            message(STATUS "Found compiled or prebuilt ICU. Remove to recompile.")
         endif()
     endif()
     
