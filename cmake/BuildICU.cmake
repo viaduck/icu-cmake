@@ -46,7 +46,9 @@ string(REPLACE "." "_" ICU_URL_VERSION ${ICU_BUILD_VERSION})
 set(ICU_URL https://fossies.org/linux/misc/icu4c-${ICU_URL_VERSION}-src.tgz)
 
 # download and unpack if needed
-if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/icu)
+if (EXISTS ${CMAKE_CURRENT_BINARY_DIR}/icu)
+    message(STATUS "Using existing ICU source")
+else()
     file(DOWNLOAD ${ICU_URL} ${CMAKE_CURRENT_BINARY_DIR}/icu_src.tgz SHOW_PROGRESS)
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar x ${CMAKE_CURRENT_BINARY_DIR}/icu_src.tgz WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 endif()
