@@ -26,6 +26,7 @@
 # includes
 include(ProcessorCount)
 include(ExternalProject)
+include(ByproductsICU)
 
 # find programs
 find_program(MAKE_PROGRAM make)
@@ -41,12 +42,13 @@ ProcessorCount(NUM_JOBS)
 
 # try to compile icu
 string(REPLACE "." "_" ICU_URL_VERSION ${ICU_BUILD_VERSION})
-set(ICU_URL http://download.icu-project.org/files/icu4c/${ICU_BUILD_VERSION}/icu4c-${ICU_URL_VERSION}-src.tgz)
+#set(ICU_URL http://download.icu-project.org/files/icu4c/${ICU_BUILD_VERSION}/icu4c-${ICU_URL_VERSION}-src.tgz)
+set(ICU_URL https://fossies.org/linux/misc/icu4c-${ICU_URL_VERSION}-src.tgz)
 
 # download and unpack if needed
 if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/icu)
     file(DOWNLOAD ${ICU_URL} ${CMAKE_CURRENT_BINARY_DIR}/icu_src.tgz SHOW_PROGRESS)
-    execute_process(COMMAND ${CMAKE_COMMAND} -E tar x icu_src.tgz)
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar x ${CMAKE_CURRENT_BINARY_DIR}/icu_src.tgz WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 endif()
 
 # if we are actually building for host, use cmake params for it
@@ -65,20 +67,18 @@ if (NOT ICU_CROSS_ARCH)
             LDFLAGS=${HOST_LDFLAGS}
     )
     
-    # force CMake-reload
-    set(HOST_CMAKE_RELOAD ${CMAKE_COMMAND} -G ${CMAKE_GENERATOR} ${CMAKE_BINARY_DIR})
-else()
-    set(HOST_CMAKE_RELOAD true)
+    # predict host libraries
+    GetICUByproducts(${CMAKE_CURRENT_BINARY_DIR}/icu_host ICU_LIBRARIES ICU_INCLUDE_DIRS)
 endif()
 
 ExternalProject_Add(
         icu_host
         SOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/icu
         BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/icu_host-build
-        CONFIGURE_COMMAND ${HOST_ENV_CMAKE} <SOURCE_DIR>/source/configure --enable-static --prefix=${CMAKE_CURRENT_BINARY_DIR}/icu_host
+        CONFIGURE_COMMAND ${HOST_ENV_CMAKE} <SOURCE_DIR>/source/configure --enable-static --prefix=${CMAKE_CURRENT_BINARY_DIR}/icu_host --libdir=${CMAKE_CURRENT_BINARY_DIR}/icu_host/lib/
         BUILD_COMMAND ${HOST_ENV_CMAKE} ${MAKE_PROGRAM} -j ${NUM_JOBS}
+        BUILD_BYPRODUCTS ${ICU_LIBRARIES}
         INSTALL_COMMAND ${HOST_ENV_CMAKE} ${MAKE_PROGRAM} install
-        COMMAND ${HOST_CMAKE_RELOAD}
 )
 add_dependencies(icu icu_host)
 
@@ -128,6 +128,9 @@ if (ICU_CROSS_ARCH)
             CXXFLAGS=${CROSS_CXXFLAGS}
             LDFLAGS=${CROSS_LDFLAGS}
     )
+    
+    # predict cross libraries
+    GetICUByproducts(${CMAKE_CURRENT_BINARY_DIR}/icu_cross ICU_LIBRARIES ICU_INCLUDE_DIRS)
 
     ExternalProject_Add(
             icu_cross
@@ -136,14 +139,11 @@ if (ICU_CROSS_ARCH)
             BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/icu_cross-build
             PATCH_COMMAND ${PATCH_PROGRAM} -p1 --forward -r - < ${CMAKE_CURRENT_SOURCE_DIR}/patches/0020-workaround-missing-locale.patch || true
             CONFIGURE_COMMAND ${CROSS_ENV_CMAKE} sh <SOURCE_DIR>/source/configure --enable-static --prefix=${CMAKE_CURRENT_BINARY_DIR}/icu_cross
-            --host=${ICU_CROSS_ARCH} --with-cross-build=${CMAKE_CURRENT_BINARY_DIR}/icu_host-build
+            --libdir=${CMAKE_CURRENT_BINARY_DIR}/icu_cross/lib/ --host=${ICU_CROSS_ARCH} --with-cross-build=${CMAKE_CURRENT_BINARY_DIR}/icu_host-build
             BUILD_COMMAND ${CROSS_ENV_CMAKE} ${MAKE_PROGRAM} -j ${NUM_JOBS}
+            BUILD_BYPRODUCTS ${ICU_LIBRARIES}
             INSTALL_COMMAND ${CROSS_ENV_CMAKE} ${MAKE_PROGRAM} install
-            COMMAND ${CMAKE_COMMAND} -G ${CMAKE_GENERATOR} ${CMAKE_BINARY_DIR}  # force CMake-reload
     )
+    
     add_dependencies(icu icu_cross)
-
-    set(ICU_ROOT_DIR ${CMAKE_CURRENT_BINARY_DIR}/icu_cross/ CACHE INTERNAL "" FORCE)
-else()
-    set(ICU_ROOT_DIR ${CMAKE_CURRENT_BINARY_DIR}/icu_host/ CACHE INTERNAL "" FORCE)
 endif()

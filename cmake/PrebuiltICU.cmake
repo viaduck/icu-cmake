@@ -26,6 +26,10 @@
 # includes
 include(ExternalProject)
 include(TargetArch)
+include(ByproductsICU)
+
+# predict icu variables
+GetICUByproducts(${CMAKE_CURRENT_BINARY_DIR}/icu_pre-prefix/src/icu_pre/${PREBUILT_BRANCH} ICU_LIBRARIES ICU_INCLUDE_DIRS)
 
 # autodetect PREBUILT_BRANCH
 target_architecture(ARCH)
@@ -48,9 +52,8 @@ ExternalProject_Add(icu_pre
         UPDATE_COMMAND ""
         CONFIGURE_COMMAND ""
         BUILD_COMMAND ""
+        BUILD_BYPRODUCTS ${ICU_LIBRARIES}
         INSTALL_COMMAND ""
-        COMMAND ${CMAKE_COMMAND} -G ${CMAKE_GENERATOR} ${CMAKE_BINARY_DIR}
         TEST_COMMAND ""
 )
 add_dependencies(icu icu_pre)
-set(ICU_ROOT_DIR ${CMAKE_CURRENT_BINARY_DIR}/icu_pre-prefix/src/icu_pre/${PREBUILT_BRANCH} CACHE INTERNAL "" FORCE)

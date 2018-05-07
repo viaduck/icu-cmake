@@ -42,31 +42,6 @@ if (SYSTEM_ICU)
 else()
     # build own or or use prebuilts
     
-    if (ICU_ROOT_DIR)
-        # try to find already build icu
-    
-        # workaround: prevent find_* from finding system files
-        set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
-        set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
-        set(CMAKE_FIND_ROOT_PATH ${ICU_ROOT_DIR})
-        find_package(ICU COMPONENTS data uc i18n io le lx QUIET)
-        
-        # check if we really found the requested version
-        if (ICU_FOUND)
-            foreach (LIB ${ICU_LIBRARIES})
-                # if ICU_ROOT_DIR is not at 0 in LIB -> found wrong icu
-                string(FIND ${LIB} ${ICU_ROOT_DIR} LIB_MATCH)
-                if (NOT LIB_MATCH EQUAL 0)
-                    set(ICU_FOUND OFF)
-                endif()
-            endforeach()
-        endif()
-        
-        if (ICU_FOUND)
-            message(STATUS "Found compiled or prebuilt ICU. Remove to recompile.")
-        endif()
-    endif()
-    
     # set up target
     if (BUILD_ICU)
         include(BuildICU)
