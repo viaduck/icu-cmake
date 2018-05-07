@@ -28,9 +28,6 @@ include(ExternalProject)
 include(TargetArch)
 include(ByproductsICU)
 
-# predict icu variables
-GetICUByproducts(${CMAKE_CURRENT_BINARY_DIR}/icu_pre-prefix/src/icu_pre/${PREBUILT_BRANCH} ICU_LIBRARIES ICU_INCLUDE_DIRS)
-
 # autodetect PREBUILT_BRANCH
 target_architecture(ARCH)
 if (WIN32)
@@ -43,6 +40,9 @@ else()
 endif()
 message(STATUS "Using ${ARCH_SYSTEM} prebuilts")
 set(PREBUILT_BRANCH ${ARCH_SYSTEM} CACHE STRING "Branch in ICU-Prebuilts to checkout from")
+
+# predict icu variables
+GetICUByproducts(${CMAKE_CURRENT_BINARY_DIR}/icu_pre-prefix/src/icu_pre/${PREBUILT_BRANCH} ICU_LIBRARIES ICU_INCLUDE_DIRS)
 
 # add icu prebuilt target
 ExternalProject_Add(icu_pre
