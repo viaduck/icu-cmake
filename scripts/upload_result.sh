@@ -29,10 +29,13 @@ if [[ $PREBUILT_AUTH = ":" ]]; then
     exit 1
 fi
 
-tar cf $1.tar $2
+# temporarily rename dir as arch for tarring
+mv $2 $1
+tar czf $1.tar.gz $1
+mv $1 $2
 
 # capture the code while printing the page
-{ code=$(curl -u $PREBUILT_AUTH -F "file=@$1.tar" -F 'dir=prebuilts/icu' -o /dev/stderr -w '%{http_code}' https://mirror.viaduck.org/scripts/upload.py); } 2>&1
+{ code=$(curl -u $PREBUILT_AUTH -F "file=@$1.tar.gz" -F 'dir=prebuilts/icu' -o /dev/stderr -w '%{http_code}' https://mirror.viaduck.org/scripts/upload.py); } 2>&1
 
 # check for 200
 if test $code -ne 200; then
