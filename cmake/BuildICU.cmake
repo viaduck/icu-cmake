@@ -42,8 +42,7 @@ ProcessorCount(NUM_JOBS)
 
 # try to compile icu
 string(REPLACE "." "_" ICU_URL_VERSION ${ICU_BUILD_VERSION})
-#set(ICU_URL http://download.icu-project.org/files/icu4c/${ICU_BUILD_VERSION}/icu4c-${ICU_URL_VERSION}-src.tgz)
-set(ICU_URL https://fossies.org/linux/misc/icu4c-${ICU_URL_VERSION}-src.tgz)
+set(ICU_URL https://mirror.viaduck.org/icu4c-${ICU_URL_VERSION}-src.tgz)
 
 # download and unpack if needed
 if (EXISTS ${CMAKE_CURRENT_BINARY_DIR}/icu)
