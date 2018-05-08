@@ -14,7 +14,7 @@ build:linux-x86_64:
     script:
         - mkdir build-linux-x86_64
         - cd build-linux-x86_64
-        - cmake -GNinja ../ -DBUILD_ICU=ON -DICU_BUILD_VERSION=$ICU_BUILD_VERSION
+        - cmake -GNinja ../ -DBUILD_ICU=ON -DICU_BUILD_VERSION=$ICU_BUILD_VERSION --trace
         - ninja
         - ../scripts/commit_result.sh x86_64-linux icu_host
     stage: build
@@ -26,7 +26,7 @@ build:windows-x86_64:
     script:
         - mkdir build-windows-x86_64
         - cd build-windows-x86_64
-        - cmake -GNinja ../ -DBUILD_ICU=ON -DICU_CROSS_ARCH=x86_64-w64-mingw32 -DICU_BUILD_VERSION=$ICU_BUILD_VERSION -DCMAKE_TOOLCHAIN_FILE=../cmake-modules/toolchains/mingw64-x86_64.cmake
+        - cmake -GNinja ../ -DBUILD_ICU=ON -DICU_CROSS_ARCH=x86_64-w64-mingw32 -DICU_BUILD_VERSION=$ICU_BUILD_VERSION -DCMAKE_TOOLCHAIN_FILE=../cmake-modules/toolchains/mingw64-x86_64.cmake --trace
         - ninja
         - ../scripts/commit_result.sh x86_64-w64-mingw32 icu_cross
     stage: build
@@ -38,7 +38,7 @@ build:android-arm64-v8a:
     script:
         - mkdir build-android-arm64-v8a
         - cd build-android-arm64-v8a
-        - cmake -GNinja ../ -DBUILD_ICU=ON -DICU_CROSS_ARCH=aarch64-linux-android -DICU_BUILD_VERSION=$ICU_BUILD_VERSION -DANDROID_PLATFORM=$ANDROID_PLATFORM -DANDROID_ABI=arm64-v8a -DANDROID_TOOLCHAIN=clang -DANDROID_STL=c++_shared -DANDROID_NDK=$ANDROID_NDK -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake
+        - cmake -GNinja ../ -DBUILD_ICU=ON -DICU_CROSS_ARCH=aarch64-linux-android -DICU_BUILD_VERSION=$ICU_BUILD_VERSION -DANDROID_PLATFORM=$ANDROID_PLATFORM -DANDROID_ABI=arm64-v8a -DANDROID_TOOLCHAIN=clang -DANDROID_STL=c++_shared -DANDROID_NDK=$ANDROID_NDK -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake --trace
         - ninja
         - ../scripts/commit_result.sh arm64-v8a-android icu_cross
     stage: build
@@ -50,7 +50,7 @@ build:android-armeabi-v7a:
     script:
         - mkdir build-android-armeabi-v7a
         - cd build-android-armeabi-v7a
-        - cmake -GNinja ../ -DBUILD_ICU=ON -DICU_CROSS_ARCH=arm-linux-androideabi -DICU_BUILD_VERSION=$ICU_BUILD_VERSION -DANDROID_PLATFORM=$ANDROID_PLATFORM -DANDROID_ABI=armeabi-v7a -DANDROID_TOOLCHAIN=clang -DANDROID_STL=c++_shared -DANDROID_NDK=$ANDROID_NDK -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake
+        - cmake -GNinja ../ -DBUILD_ICU=ON -DICU_CROSS_ARCH=arm-linux-androideabi -DICU_BUILD_VERSION=$ICU_BUILD_VERSION -DANDROID_PLATFORM=$ANDROID_PLATFORM -DANDROID_ABI=armeabi-v7a -DANDROID_TOOLCHAIN=clang -DANDROID_STL=c++_shared -DANDROID_NDK=$ANDROID_NDK -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake --trace
         - ninja
         - ../scripts/commit_result.sh armeabi-v7a-android icu_cross
     stage: build
@@ -62,7 +62,7 @@ build:android-x86:
     script:
         - mkdir build-android-x86
         - cd build-android-x86
-        - cmake -GNinja ../ -DBUILD_ICU=ON -DICU_CROSS_ARCH=i686-linux-android -DICU_BUILD_VERSION=$ICU_BUILD_VERSION -DANDROID_PLATFORM=$ANDROID_PLATFORM -DANDROID_ABI=x86 -DANDROID_TOOLCHAIN=clang -DANDROID_STL=c++_shared -DANDROID_NDK=$ANDROID_NDK -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake
+        - cmake -GNinja ../ -DBUILD_ICU=ON -DICU_CROSS_ARCH=i686-linux-android -DICU_BUILD_VERSION=$ICU_BUILD_VERSION -DANDROID_PLATFORM=$ANDROID_PLATFORM -DANDROID_ABI=x86 -DANDROID_TOOLCHAIN=clang -DANDROID_STL=c++_shared -DANDROID_NDK=$ANDROID_NDK -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake --trace
         - ninja
         - ../scripts/commit_result.sh x86-android icu_cross
     stage: build
@@ -74,7 +74,7 @@ build:android-x86_64:
     script:
         - mkdir build-android-x86_64
         - cd build-android-x86_64
-        - cmake -GNinja ../ -DBUILD_ICU=ON -DICU_CROSS_ARCH=x86_64-linux-android -DICU_BUILD_VERSION=$ICU_BUILD_VERSION -DANDROID_PLATFORM=$ANDROID_PLATFORM -DANDROID_ABI=x86_64 -DANDROID_TOOLCHAIN=clang -DANDROID_STL=c++_shared -DANDROID_NDK=$ANDROID_NDK -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake
+        - cmake -GNinja ../ -DBUILD_ICU=ON -DICU_CROSS_ARCH=x86_64-linux-android -DICU_BUILD_VERSION=$ICU_BUILD_VERSION -DANDROID_PLATFORM=$ANDROID_PLATFORM -DANDROID_ABI=x86_64 -DANDROID_TOOLCHAIN=clang -DANDROID_STL=c++_shared -DANDROID_NDK=$ANDROID_NDK -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake --trace
         - ninja
         - ../scripts/commit_result.sh x86_64-android icu_cross
     stage: build
