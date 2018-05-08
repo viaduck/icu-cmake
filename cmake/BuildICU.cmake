@@ -42,7 +42,7 @@ ProcessorCount(NUM_JOBS)
 
 # try to compile icu
 string(REPLACE "." "_" ICU_URL_VERSION ${ICU_BUILD_VERSION})
-set(ICU_URL https://mirror.viaduck.org/icu4c-${ICU_URL_VERSION}-src.tgz)
+set(ICU_URL https://mirror.viaduck.org/icu/icu4c-${ICU_URL_VERSION}-src.tgz)
 
 if (ICU_BUILD_HASH)
     set(ICU_CHECK_HASH EXPECTED_HASH SHA256=${ICU_BUILD_HASH})
