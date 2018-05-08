@@ -46,8 +46,7 @@ GetICUByproducts(${CMAKE_CURRENT_BINARY_DIR}/icu_pre-prefix/src/icu_pre/${PREBUI
 
 # add icu prebuilt target
 ExternalProject_Add(icu_pre
-        GIT_REPOSITORY https://gl.viaduck.org/viaduck/icu-prebuilts.git
-        GIT_TAG ${PREBUILT_BRANCH}
+        URL https://mirror.viaduck.org/prebuilts/icu/${PREBUILT_BRANCH}.tar
 
         UPDATE_COMMAND ""
         CONFIGURE_COMMAND ""

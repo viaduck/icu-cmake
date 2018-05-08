@@ -24,24 +24,10 @@
 # usage: <architecture> <directory>
 
 # early exit when no secrets are set
-if [[ $PREBUILTS_REPO = *"://:@"* ]]; then
-    echo "No secrets to commit result."
+if [[ $PREBUILT_AUTH = "" ]]; then
+    echo "No secrets to upload result."
     exit 0
 fi
 
-git clone $PREBUILTS_REPO
-cd icu-prebuilts
-git checkout master
-git branch $1
-git checkout $1
-git branch --set-upstream-to=origin/$1
-git pull
-
-rm -R $1/* || mkdir $1
-cp -R ../$2/. $1
-
-git add $1
-git config --global user.email "slave@viaduck.org"
-git config --global user.name "slave"
-git commit -m "Automatically built by slave ($ICU_BUILD_VERSION)" > /dev/null
-git push --set-upstream origin $1
+tar cf $1.tar $2
+curl -u $PREBUILT_AUTH -F "file=@$1.tar" -F 'dir=prebuilts/icu' https://mirror.viaduck.org/scripts/upload.py
