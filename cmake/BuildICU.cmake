@@ -44,11 +44,15 @@ ProcessorCount(NUM_JOBS)
 string(REPLACE "." "_" ICU_URL_VERSION ${ICU_BUILD_VERSION})
 set(ICU_URL https://mirror.viaduck.org/icu4c-${ICU_URL_VERSION}-src.tgz)
 
+if (ICU_BUILD_HASH)
+    set(ICU_CHECK_HASH EXPECTED_HASH SHA256=${ICU_BUILD_HASH})
+endif()
+
 # download and unpack if needed
 if (EXISTS ${CMAKE_CURRENT_BINARY_DIR}/icu)
     message(STATUS "Using existing ICU source")
 else()
-    file(DOWNLOAD ${ICU_URL} ${CMAKE_CURRENT_BINARY_DIR}/icu_src.tgz SHOW_PROGRESS)
+    file(DOWNLOAD ${ICU_URL} ${CMAKE_CURRENT_BINARY_DIR}/icu_src.tgz SHOW_PROGRESS ${ICU_CHECK_HASH})
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar x ${CMAKE_CURRENT_BINARY_DIR}/icu_src.tgz WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 endif()
 
