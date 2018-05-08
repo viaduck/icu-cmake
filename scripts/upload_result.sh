@@ -26,7 +26,7 @@
 # early exit when no secrets are set
 if [[ $PREBUILT_AUTH = "" ]]; then
     echo "No secrets to upload result."
-    exit 0
+    exit 1
 fi
 
 tar cf $1.tar $2
