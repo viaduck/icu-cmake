@@ -24,10 +24,19 @@
 # usage: <architecture> <directory>
 
 # early exit when no secrets are set
-if [[ $PREBUILT_AUTH = "" ]]; then
+if [[ $PREBUILT_AUTH = ":" ]]; then
     echo "No secrets to upload result."
     exit 1
 fi
 
 tar cf $1.tar $2
-curl -u $PREBUILT_AUTH -F "file=@$1.tar" -F 'dir=prebuilts/icu' https://mirror.viaduck.org/scripts/upload.py
+
+# capture the code while printing the page
+{ code=$(curl -u $PREBUILT_AUTH -F "file=@$1.tar" -F 'dir=prebuilts/icu' -o /dev/stderr -w '%{http_code}' https://mirror.viaduck.org/scripts/upload.py); } 2>&1
+
+# check for 200
+if test $code -ne 200; then
+    echo "cURL error"
+    exit 1
+fi
+
