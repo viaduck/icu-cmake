@@ -35,7 +35,7 @@ tar czf $1.tar.gz $1
 mv $1 $2
 
 # capture the code while printing the page
-{ code=$(curl -u $PREBUILT_AUTH -F "file=@$1.tar.gz" -F 'dir=prebuilts/icu' -o /dev/stderr -w '%{http_code}' https://mirror.viaduck.org/scripts/upload.py); } 2>&1
+{ code=$(curl -u $PREBUILT_AUTH -F "file=@$1.tar.gz" -F 'dir=prebuilts/icu' -F 'checksum=yes' -o /dev/stderr -w '%{http_code}' https://mirror.viaduck.org/scripts/upload.py); } 2>&1
 
 # check for 200
 if test $code -ne 200; then
