@@ -29,13 +29,21 @@ See https://github.com/axr/solar-cmake
 # "There are many more known variants/revisions that we do not handle/detect."
 
 set(archdetect_c_code "
-#if defined(__arm__) || defined(__TARGET_ARCH_ARM)
-    #if defined(__ARM_ARCH_7__) \\
+#if defined(__arm__) || defined(__TARGET_ARCH_ARM) || defined(_M_ARM) || defined(__aarch64__) || defined(__ARM64__)
+    #if defined(__ARM64_ARCH_8__) \\
+        || defined(__aarch64__) \\
+        || defined(__ARMv8__) \\
+        || defined(__ARMv8_A__)
+        #error cmake_ARCH arm64-v8a
+    #elif defined(__ARM_ARCH_7__) \\
         || defined(__ARM_ARCH_7A__) \\
         || defined(__ARM_ARCH_7R__) \\
         || defined(__ARM_ARCH_7M__) \\
+        || defined(__ARM_ARCH_7S__) \\
+        || defined(_ARM_ARCH_7) \\
+        || defined(__CORE_CORTEXA__) \\
         || (defined(__TARGET_ARCH_ARM) && __TARGET_ARCH_ARM-0 >= 7)
-        #error cmake_ARCH armv7
+        #error cmake_ARCH armeabi-v7a
     #elif defined(__ARM_ARCH_6__) \\
         || defined(__ARM_ARCH_6J__) \\
         || defined(__ARM_ARCH_6T2__) \\
@@ -65,9 +73,9 @@ set(archdetect_c_code "
     #else
         #error cmake_ARCH ppc
     #endif
+#else
+    #error cmake_ARCH unknown
 #endif
-
-#error cmake_ARCH unknown
 ")
 
 # Set ppc_support to TRUE before including this file or ppc and ppc64
@@ -140,7 +148,7 @@ function(target_architecture output_var)
         )
 
         # Parse the architecture name from the compiler output
-        string(REGEX MATCH "cmake_ARCH ([a-zA-Z0-9_]+)" ARCH "${ARCH}")
+        string(REGEX MATCH "cmake_ARCH ([a-zA-Z0-9_\-]+)" ARCH "${ARCH}")
 
         # Get rid of the value marker leaving just the architecture name
         string(REPLACE "cmake_ARCH " "" ARCH "${ARCH}")

@@ -60,15 +60,15 @@ build:android-armeabi-v7a:
     only:
         - master
         
-build:android-x86:
+build:android-i686:
     image: viaduck/ci:android
     script:
         - cat $ANDROID_NDK/version.txt
-        - mkdir build-android-x86
-        - cd build-android-x86
+        - mkdir build-android-i686
+        - cd build-android-i686
         - cmake -GNinja ../ -DBUILD_ICU=ON -DICU_CROSS_ARCH=i686-linux-android -DICU_BUILD_VERSION=$ICU_BUILD_VERSION -DICU_BUILD_HASH=$ICU_BUILD_HASH -DANDROID_PLATFORM=$ANDROID_PLATFORM -DANDROID_ABI=x86 -DANDROID_TOOLCHAIN=clang -DANDROID_STL=c++_shared -DANDROID_NDK=$ANDROID_NDK -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake
         - ninja
-        - ../scripts/upload_result.sh x86-android icu_cross
+        - ../scripts/upload_result.sh i686-android icu_cross
     stage: build
     only:
         - master
