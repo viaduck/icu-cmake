@@ -16,7 +16,7 @@ To use the system ICU, simply set `SYSTEM_ICU=ON`.
 ## Prebuilt ICU
 Default behaviour is the download of a prebuilt binary. This is only intended
 as a convenience for debugging purposes and NOT for production use. 
-Available prebuilt binaries can be viewed [here](https://mirror.viaduck.org/prebuilts/icu/).
+Available prebuilt binaries can be viewed [here](https://builds.viaduck.org/prebuilts/icu/).
 
 ## Build ICU
 In order to build `ICU`, set `BUILD_ICU=ON` along with the version, for example `ICU_BUILD_VERSION=61.1`. 
