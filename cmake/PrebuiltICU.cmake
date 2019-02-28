@@ -49,12 +49,17 @@ if (NOT PREBUILT_BRANCH)
 endif()
 set(PREBUILT_BRANCH ${ARCH_SYSTEM} CACHE STRING "Branch in ICU-Prebuilts to checkout from")
 
+# auto version
+if (NOT ICU_PREBUILT_VERSION)
+    set(ICU_PREBUILT_VERSION "63.1")
+endif()
+
 # predict icu variables
 GetICUByproducts(${CMAKE_CURRENT_BINARY_DIR}/icu_pre-prefix/src/icu_pre/ ICU_LIBRARIES ICU_INCLUDE_DIRS)
 
 # add icu prebuilt target
 ExternalProject_Add(icu_pre
-        URL https://mirror.viaduck.org/prebuilts/icu/${PREBUILT_BRANCH}.tar.gz
+        URL https://builds.viaduck.org/prebuilts/icu/${ICU_PREBUILT_VERSION}/${PREBUILT_BRANCH}.tar.gz
 
         UPDATE_COMMAND ""
         CONFIGURE_COMMAND ""
