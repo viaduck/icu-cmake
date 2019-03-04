@@ -68,4 +68,5 @@ ExternalProject_Add(icu_pre
         INSTALL_COMMAND ""
         TEST_COMMAND ""
 )
+set(ICU_TARGET icu_pre)
 add_dependencies(icu icu_pre)

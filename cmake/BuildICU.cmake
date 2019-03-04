@@ -85,6 +85,7 @@ ExternalProject_Add(
         BUILD_BYPRODUCTS ${ICU_LIBRARIES}
         INSTALL_COMMAND ${HOST_ENV_CMAKE} ${MAKE_PROGRAM} install
 )
+set(ICU_TARGET icu_host)
 add_dependencies(icu icu_host)
 
 if (ICU_CROSS_ARCH)
@@ -151,5 +152,6 @@ if (ICU_CROSS_ARCH)
             INSTALL_COMMAND ${CROSS_ENV_CMAKE} ${MAKE_PROGRAM} install
     )
     
+    set(ICU_TARGET icu_cross)
     add_dependencies(icu icu_cross)
 endif()
