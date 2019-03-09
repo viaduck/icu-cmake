@@ -27,15 +27,3 @@
  
  # This allows all the data to be in one directory
  ifeq ($(PKGDATA_MODE),dll)
-
---- icu/source/tools/pkgdata/pkgdata.cpp.orig
-+++ icu/source/tools/pkgdata/pkgdata.cpp
-@@ -897,7 +897,7 @@
-  */
- static void createFileNames(UPKGOptions *o, const char mode, const char *version_major, const char *version, const char *libName, UBool reverseExt, UBool noVersion) {
-     const char* FILE_EXTENSION_SEP = uprv_strlen(pkgDataFlags[SO_EXT]) == 0 ? "" : ".";
--    const char* FILE_SUFFIX = pkgDataFlags[LIB_EXT_ORDER][0] == '.' ? "." : "";
-+    const char* FILE_SUFFIX = ".";
- 
- #if U_PLATFORM == U_PF_MINGW
-         /* MinGW does not need the library prefix when building in dll mode. */
