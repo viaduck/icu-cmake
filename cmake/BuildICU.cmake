@@ -95,31 +95,9 @@ if (ICU_CROSS_ARCH)
         set(CROSS_LIBS "")
     
         # copy over both sysroots to a common sysroot (workaround ICU failing without one single sysroot)
-        if (${ANDROID_NDK_MAJOR} GREATER 19)
-            string(REPLACE "-clang" "" ANDROID_TOOLCHAIN_NAME ${ANDROID_TOOLCHAIN_NAME})
-            file(COPY ${ANDROID_TOOLCHAIN_ROOT}/sysroot/usr/lib/${ANDROID_TOOLCHAIN_NAME}/${ANDROID_PLATFORM_LEVEL}/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/sysroot/usr/lib/)
-            file(COPY ${ANDROID_TOOLCHAIN_ROOT}/sysroot/usr/lib/${ANDROID_TOOLCHAIN_NAME}/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/sysroot/usr/lib/ PATTERN *.*)
-        else ()
-            file(COPY ${ANDROID_SYSTEM_LIBRARY_PATH}/usr DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/sysroot/)
-            
-            # for c++ standard headers
-            foreach(INC ${CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES})
-                set(CROSS_INCLUDES "${CROSS_INCLUDES} -I${INC}")
-            endforeach()
-            
-            # for c++ standard libs
-            set(CROSS_LIBS ${CMAKE_C_STANDARD_LIBRARIES_INIT})
-            string(REPLACE "\" \"" ";" ANDROID_CXX_STANDARD_LIBRARIES ${ANDROID_CXX_STANDARD_LIBRARIES})
-            string(REPLACE "\"" "" ANDROID_CXX_STANDARD_LIBRARIES ${ANDROID_CXX_STANDARD_LIBRARIES})
-            foreach(LIB ${ANDROID_CXX_STANDARD_LIBRARIES})
-                get_filename_component(LIB_PATH ${LIB} DIRECTORY)
-                get_filename_component(LIB_NAME ${LIB} NAME_WE)
-                # remove starting "lib"
-                string(REGEX REPLACE "^lib" "" LIB_NAME ${LIB_NAME})
-                
-                set(CROSS_LIBS "${CROSS_LIBS} -L${LIB_PATH} -l${LIB_NAME}")
-            endforeach()
-        endif()
+        string(REPLACE "-clang" "" ANDROID_TOOLCHAIN_NAME ${ANDROID_TOOLCHAIN_NAME})
+        file(COPY ${ANDROID_TOOLCHAIN_ROOT}/sysroot/usr/lib/${ANDROID_TOOLCHAIN_NAME}/${ANDROID_PLATFORM_LEVEL}/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/sysroot/usr/lib/)
+        file(COPY ${ANDROID_TOOLCHAIN_ROOT}/sysroot/usr/lib/${ANDROID_TOOLCHAIN_NAME}/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/sysroot/usr/lib/ PATTERN *.*)
         file(COPY ${CMAKE_SYSROOT}/usr/include DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/sysroot/usr/)
 
         set(CROSS_CFLAGS "")
