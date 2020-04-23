@@ -51,10 +51,8 @@ else()
     endif()
 
     if (NOT ICU_STATIC)
-        add_custom_command(
-            TARGET ${ICU_TARGET} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy
-                ${ICU_LIBRARIES} ${CMAKE_BINARY_DIR}/)
+        include(GNUInstallDirs)
+        install(FILES ${ICU_LIBRARIES} DESTINATION ${CMAKE_INSTALL_LIBDIR})
     endif()
 endif()
 
