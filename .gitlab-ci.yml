@@ -32,6 +32,7 @@ build:windows-x86_64:
         - cmake -GNinja ../ -DBUILD_ICU=ON -DICU_CROSS_ARCH=x86_64-w64-mingw32 -DICU_BUILD_VERSION=$ICU_BUILD_VERSION -DICU_BUILD_HASH=$ICU_BUILD_HASH -DCMAKE_TOOLCHAIN_FILE=../cmake-modules/toolchains/mingw64-x86_64.cmake
         - ninja
         - cp icu_cross-build/lib/*.dll icu_cross/lib/ # workaround for missing copy step
+        - mv icu_cross/lib/icudt.67.dll icu_cross/lib/icudt67.dll # workaround for wrong dll name
         - ../scripts/upload_result.sh x86_64-w64-mingw32 icu_cross
     stage: build
     only:
