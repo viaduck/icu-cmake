@@ -41,6 +41,9 @@ endif()
 ProcessorCount(NUM_JOBS)
 
 # try to compile icu
+if (NOT ICU_BUILD_VERSION)
+    message(FATAL_ERROR "Missing ICU_BUILD_VERSION")
+endif()
 string(REPLACE "." "_" ICU_URL_VERSION ${ICU_BUILD_VERSION})
 set(ICU_URL https://mirror.viaduck.org/icu/icu4c-${ICU_URL_VERSION}-src.tgz)
 
@@ -52,7 +55,14 @@ endif()
 if (EXISTS ${CMAKE_CURRENT_BINARY_DIR}/icu)
     message(STATUS "Using existing ICU source")
 else()
-    file(DOWNLOAD ${ICU_URL} ${CMAKE_CURRENT_BINARY_DIR}/icu_src.tgz SHOW_PROGRESS ${ICU_CHECK_HASH})
+    file(DOWNLOAD ${ICU_URL} ${CMAKE_CURRENT_BINARY_DIR}/icu_src.tgz SHOW_PROGRESS STATUS ICU_DL_STATUS ${ICU_CHECK_HASH})
+
+    # check download result
+    list(GET ICU_DL_STATUS 0 ICU_DL_STATUS_CODE)
+    if (NOT ICU_DL_STATUS_CODE EQUAL 0)
+        message(FATAL_ERROR "ICU download failed with code: ${ICU_DL_STATUS_CODE}")
+    endif()
+
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar x ${CMAKE_CURRENT_BINARY_DIR}/icu_src.tgz WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 endif()
 
