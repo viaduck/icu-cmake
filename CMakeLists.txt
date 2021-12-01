@@ -22,6 +22,7 @@
 #
 
 cmake_minimum_required(VERSION 3.2)
+project(icu-cmake)
 
 # cache variables
 set(BUILD_ICU OFF CACHE BOOL "Enable compilation of ICU")
