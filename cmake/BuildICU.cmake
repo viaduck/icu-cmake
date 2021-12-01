@@ -86,13 +86,19 @@ if (NOT ICU_CROSS_ARCH)
     GetICUByproducts(${CMAKE_CURRENT_BINARY_DIR}/icu_host ICU_LIBRARIES ICU_INCLUDE_DIRS)
 endif()
 
+# common configuration options for host and cross build
+set(ICU_CFG --enable-static)
+if (NOT ICU_DISABLE_RPATH)
+    list(APPEND ICU_CFG --enable-rpath)
+endif()
+
 ExternalProject_Add(
         icu_host
         SOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/icu
         BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/icu_host-build
         PATCH_COMMAND ${PATCH_PROGRAM} -p1 --forward -r - < ${CMAKE_CURRENT_SOURCE_DIR}/patches/0010-fix-pkgdata-suffix.patch || true
         COMMAND ${PATCH_PROGRAM} -p1 --forward -r - < ${CMAKE_CURRENT_SOURCE_DIR}/patches/0023-remove-soname-version.patch || true
-        CONFIGURE_COMMAND ${HOST_ENV_CMAKE} <SOURCE_DIR>/source/configure --enable-static --prefix=${CMAKE_CURRENT_BINARY_DIR}/icu_host --libdir=${CMAKE_CURRENT_BINARY_DIR}/icu_host/lib/
+        CONFIGURE_COMMAND ${HOST_ENV_CMAKE} <SOURCE_DIR>/source/configure --prefix=${CMAKE_CURRENT_BINARY_DIR}/icu_host --libdir=${CMAKE_CURRENT_BINARY_DIR}/icu_host/lib/ ${ICU_CFG}
         BUILD_COMMAND ${HOST_ENV_CMAKE} ${MAKE_PROGRAM} -j ${NUM_JOBS}
         BUILD_BYPRODUCTS ${ICU_LIBRARIES}
         INSTALL_COMMAND ${HOST_ENV_CMAKE} ${MAKE_PROGRAM} install
@@ -139,8 +145,8 @@ if (ICU_CROSS_ARCH)
             DEPENDS icu_host
             SOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/icu
             BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/icu_cross-build
-            CONFIGURE_COMMAND ${CROSS_ENV_CMAKE} sh <SOURCE_DIR>/source/configure --enable-static --prefix=${CMAKE_CURRENT_BINARY_DIR}/icu_cross
-            --libdir=${CMAKE_CURRENT_BINARY_DIR}/icu_cross/lib/ --host=${ICU_CROSS_ARCH} --with-cross-build=${CMAKE_CURRENT_BINARY_DIR}/icu_host-build
+            CONFIGURE_COMMAND ${CROSS_ENV_CMAKE} sh <SOURCE_DIR>/source/configure --prefix=${CMAKE_CURRENT_BINARY_DIR}/icu_cross
+            --libdir=${CMAKE_CURRENT_BINARY_DIR}/icu_cross/lib/ --host=${ICU_CROSS_ARCH} --with-cross-build=${CMAKE_CURRENT_BINARY_DIR}/icu_host-build ${ICU_CFG}
             BUILD_COMMAND ${CROSS_ENV_CMAKE} ${MAKE_PROGRAM} -j ${NUM_JOBS}
             BUILD_BYPRODUCTS ${ICU_LIBRARIES}
             INSTALL_COMMAND ${CROSS_ENV_CMAKE} ${MAKE_PROGRAM} install
