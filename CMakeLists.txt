@@ -26,9 +26,10 @@ project(icu-cmake)
 
 # cache variables
 set(BUILD_ICU OFF CACHE BOOL "Enable compilation of ICU")
-set(ICU_BUILD_VERSION OFF CACHE STRING "ICU version to build")
+set(ICU_BUILD_VERSION "" CACHE STRING "ICU version to build")
+set(ICU_CFG_OPTIONS "" CACHE STRING "Additional ICU configuration options")
 set(ICU_STATIC OFF CACHE BOOL "Use static instead of shared ICU (does not work for system)")
-set(ICU_CROSS_ARCH OFF CACHE STRING "Target triplet for ICU cross compile")
+set(ICU_CROSS_ARCH "" CACHE STRING "Target triplet for ICU cross compile")
 set(SYSTEM_ICU OFF CACHE BOOL "Use system-provided icu libraries (instead of prebuilts or building")
 
 # allow including our modules

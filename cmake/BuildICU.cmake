@@ -66,6 +66,12 @@ else()
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar x ${CMAKE_CURRENT_BINARY_DIR}/icu_src.tgz WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 endif()
 
+# common configuration options for host and cross build
+set(ICU_CFG --enable-static ${ICU_CFG_OPTIONS})
+if (NOT ICU_DISABLE_RPATH)
+    list(APPEND ICU_CFG --enable-rpath)
+endif()
+
 # if we are actually building for host, use cmake params for it
 if (NOT ICU_CROSS_ARCH)
     set(HOST_CFLAGS "${CMAKE_C_FLAGS}")
@@ -73,6 +79,7 @@ if (NOT ICU_CROSS_ARCH)
     set(HOST_CC "${CMAKE_C_COMPILER}")
     set(HOST_CXX "${CMAKE_CXX_COMPILER}")
     set(HOST_LDFLAGS "${CMAKE_MODULE_LINKER_FLAGS}")
+    set(HOST_CFG ${ICU_CFG})
     
     set(HOST_ENV_CMAKE ${CMAKE_COMMAND} -E env
             CC=${HOST_CC}
@@ -86,19 +93,13 @@ if (NOT ICU_CROSS_ARCH)
     GetICUByproducts(${CMAKE_CURRENT_BINARY_DIR}/icu_host ICU_LIBRARIES ICU_INCLUDE_DIRS)
 endif()
 
-# common configuration options for host and cross build
-set(ICU_CFG --enable-static)
-if (NOT ICU_DISABLE_RPATH)
-    list(APPEND ICU_CFG --enable-rpath)
-endif()
-
 ExternalProject_Add(
         icu_host
         SOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/icu
         BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/icu_host-build
         PATCH_COMMAND ${PATCH_PROGRAM} -p1 --forward -r - < ${CMAKE_CURRENT_SOURCE_DIR}/patches/0010-fix-pkgdata-suffix.patch || true
         COMMAND ${PATCH_PROGRAM} -p1 --forward -r - < ${CMAKE_CURRENT_SOURCE_DIR}/patches/0023-remove-soname-version.patch || true
-        CONFIGURE_COMMAND ${HOST_ENV_CMAKE} <SOURCE_DIR>/source/configure --prefix=${CMAKE_CURRENT_BINARY_DIR}/icu_host --libdir=${CMAKE_CURRENT_BINARY_DIR}/icu_host/lib/ ${ICU_CFG}
+        CONFIGURE_COMMAND ${HOST_ENV_CMAKE} <SOURCE_DIR>/source/configure --prefix=${CMAKE_CURRENT_BINARY_DIR}/icu_host --libdir=${CMAKE_CURRENT_BINARY_DIR}/icu_host/lib/ ${HOST_CFG}
         BUILD_COMMAND ${HOST_ENV_CMAKE} ${MAKE_PROGRAM} -j ${NUM_JOBS}
         BUILD_BYPRODUCTS ${ICU_LIBRARIES}
         INSTALL_COMMAND ${HOST_ENV_CMAKE} ${MAKE_PROGRAM} install
