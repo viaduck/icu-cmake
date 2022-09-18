@@ -72,6 +72,19 @@ if (NOT ICU_DISABLE_RPATH)
     list(APPEND ICU_CFG --enable-rpath)
 endif()
 
+# autodetect icu cross arch from android abi
+if (NOT ICU_CROSS_ARCH AND ANDROID_ABI)
+    if (ANDROID_ABI STREQUAL "arm64-v8a")
+        set(ICU_CROSS_ARCH "aarch64-linux-android")
+    elseif (ANDROID_ABI STREQUAL "armeabi-v7a")
+        set(ICU_CROSS_ARCH "arm-linux-androideabi")
+    elseif (ANDROID_ABI STREQUAL "x86")
+        set(ICU_CROSS_ARCH "i686-linux-android")
+    elseif (ANDROID_ABI STREQUAL "x86_64")
+        set(ICU_CROSS_ARCH "x86_64-linux-android")
+    endif()
+endif()
+
 # if we are actually building for host, use cmake params for it
 if (NOT ICU_CROSS_ARCH)
     set(HOST_CFLAGS "${CMAKE_C_FLAGS}")
