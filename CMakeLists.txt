@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2018 The ViaDuck Project
+# Copyright (c) 2018-2022 The ViaDuck Project
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -54,7 +54,7 @@ else()
 
     if (NOT ICU_STATIC)
         include(GNUInstallDirs)
-        install(FILES ${ICU_LIBRARIES} DESTINATION ${CMAKE_INSTALL_LIBDIR})
+        install(FILES ${ICU_LIBRARY_FILES} DESTINATION ${CMAKE_INSTALL_LIBDIR})
     endif()
 endif()
 

@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2018 The ViaDuck Project
+# Copyright (c) 2018-2022 The ViaDuck Project
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,7 @@
 #
 
 # precompute future ICU library paths from build dir
-function(GetICUByproducts ICU_PATH ICU_LIB_VAR ICU_INCLUDE_VAR)
+function(GetICUByproducts ICU_PATH ICU_TARGETS_VAR ICU_LIBS_VAR ICU_INCLUDE_VAR)
     # include directory
     set(${ICU_INCLUDE_VAR} "${ICU_PATH}/include" PARENT_SCOPE)
     
@@ -50,10 +50,19 @@ function(GetICUByproducts ICU_PATH ICU_LIB_VAR ICU_INCLUDE_VAR)
         set(ICU_STATIC_LIB "${ICU_PATH}/lib/${ICU_STATIC_PREFIX}icu${ICU_BASE_NAME}${ICU_STATIC_SUFFIX}")
         
         if (ICU_STATIC)
-            list(APPEND ${ICU_LIB_VAR} ${ICU_STATIC_LIB})
+            set(ICU_LIB ${ICU_STATIC_LIB})
         else()
-            list(APPEND ${ICU_LIB_VAR} ${ICU_SHARED_LIB})
+            set(ICU_LIB ${ICU_SHARED_LIB})
         endif()
+
+        # windows .dll.a require unknown import library type
+        add_library(icu_${ICU_BASE_NAME} UNKNOWN IMPORTED)
+        set_property(TARGET icu_${ICU_BASE_NAME} PROPERTY IMPORTED_LOCATION ${ICU_LIB})
+        list(APPEND ${ICU_LIBS_VAR} ${ICU_LIB})
+        list(APPEND ${ICU_TARGETS_VAR} icu_${ICU_BASE_NAME})
     endforeach()
-    set(${ICU_LIB_VAR} ${${ICU_LIB_VAR}} PARENT_SCOPE)
+
+    # returns
+    set(${ICU_TARGETS_VAR} ${${ICU_TARGETS_VAR}} PARENT_SCOPE)
+    set(${ICU_LIBS_VAR} ${${ICU_LIBS_VAR}} PARENT_SCOPE)
 endfunction()

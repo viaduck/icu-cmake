@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2018 The ViaDuck Project
+# Copyright (c) 2018-2022 The ViaDuck Project
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -90,7 +90,7 @@ if (NOT ICU_CROSS_ARCH)
     )
     
     # predict host libraries
-    GetICUByproducts(${CMAKE_CURRENT_BINARY_DIR}/icu_host ICU_LIBRARIES ICU_INCLUDE_DIRS)
+    GetICUByproducts(${CMAKE_CURRENT_BINARY_DIR}/icu_host ICU_LIBRARIES ICU_LIBRARY_FILES ICU_INCLUDE_DIRS)
 endif()
 
 ExternalProject_Add(
@@ -101,7 +101,7 @@ ExternalProject_Add(
         COMMAND ${PATCH_PROGRAM} -p1 --forward -r - < ${CMAKE_CURRENT_SOURCE_DIR}/patches/0023-remove-soname-version.patch || true
         CONFIGURE_COMMAND ${HOST_ENV_CMAKE} <SOURCE_DIR>/source/configure --prefix=${CMAKE_CURRENT_BINARY_DIR}/icu_host --libdir=${CMAKE_CURRENT_BINARY_DIR}/icu_host/lib/ ${HOST_CFG}
         BUILD_COMMAND ${HOST_ENV_CMAKE} ${MAKE_PROGRAM} -j ${NUM_JOBS}
-        BUILD_BYPRODUCTS ${ICU_LIBRARIES}
+        BUILD_BYPRODUCTS ${ICU_LIBRARY_FILES}
         INSTALL_COMMAND ${HOST_ENV_CMAKE} ${MAKE_PROGRAM} install
 )
 set(ICU_TARGET icu_host)
@@ -139,7 +139,7 @@ if (ICU_CROSS_ARCH)
     )
     
     # predict cross libraries
-    GetICUByproducts(${CMAKE_CURRENT_BINARY_DIR}/icu_cross ICU_LIBRARIES ICU_INCLUDE_DIRS)
+    GetICUByproducts(${CMAKE_CURRENT_BINARY_DIR}/icu_cross ICU_LIBRARIES ICU_LIBRARY_FILES ICU_INCLUDE_DIRS)
 
     ExternalProject_Add(
             icu_cross
@@ -149,7 +149,7 @@ if (ICU_CROSS_ARCH)
             CONFIGURE_COMMAND ${CROSS_ENV_CMAKE} sh <SOURCE_DIR>/source/configure --prefix=${CMAKE_CURRENT_BINARY_DIR}/icu_cross
             --libdir=${CMAKE_CURRENT_BINARY_DIR}/icu_cross/lib/ --host=${ICU_CROSS_ARCH} --with-cross-build=${CMAKE_CURRENT_BINARY_DIR}/icu_host-build ${ICU_CFG}
             BUILD_COMMAND ${CROSS_ENV_CMAKE} ${MAKE_PROGRAM} -j ${NUM_JOBS}
-            BUILD_BYPRODUCTS ${ICU_LIBRARIES}
+            BUILD_BYPRODUCTS ${ICU_LIBRARY_FILES}
             INSTALL_COMMAND ${CROSS_ENV_CMAKE} ${MAKE_PROGRAM} install
     )
     
