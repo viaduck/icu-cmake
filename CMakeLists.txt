@@ -41,7 +41,7 @@ add_library(icu INTERFACE)
 
 if (SYSTEM_ICU)
     # try to find icu
-    find_package(ICU COMPONENTS data uc i18n io le lx REQUIRED)
+    find_package(ICU COMPONENTS data uc i18n io REQUIRED)
 else()
     # build own or or use prebuilts
     
