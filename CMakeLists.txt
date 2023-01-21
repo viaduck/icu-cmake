@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2018-2022 The ViaDuck Project
+# Copyright (c) 2018-2023 The ViaDuck Project
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,11 @@
 
 cmake_minimum_required(VERSION 3.2)
 project(icu-cmake)
+
+if (POLICY CMP0135)
+    # policy CMP0135 will use OLD behavior for consistency
+    cmake_policy(SET CMP0135 OLD)
+endif()
 
 # cache variables
 set(BUILD_ICU OFF CACHE BOOL "Enable compilation of ICU")
