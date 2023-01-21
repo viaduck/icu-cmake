@@ -17,6 +17,7 @@ To use the system ICU, simply set `SYSTEM_ICU=ON`.
 Default behaviour is the download of a prebuilt binary. This is only intended
 as a convenience for debugging purposes and NOT for production use. 
 Available prebuilt binaries can be viewed [here](https://builds.viaduck.org/prebuilts/icu/).
+The prebuilt Windows binaries are built with MinGW-w64, so they may not be compatible with MSVC.
 
 ## Build ICU
 In order to build `ICU`, set `BUILD_ICU=ON` along with the version, for example `ICU_BUILD_VERSION=61.1`. 
