@@ -51,7 +51,7 @@ set(PREBUILT_BRANCH ${ARCH_SYSTEM} CACHE STRING "Branch in ICU-Prebuilts to chec
 
 # auto version
 if (NOT ICU_PREBUILT_VERSION)
-    set(ICU_PREBUILT_VERSION "74.1")
+    set(ICU_PREBUILT_VERSION "74.2")
 endif()
 
 # predict icu variables
