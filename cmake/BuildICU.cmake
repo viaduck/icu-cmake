@@ -44,8 +44,7 @@ ProcessorCount(NUM_JOBS)
 if (NOT ICU_BUILD_VERSION)
     message(FATAL_ERROR "Missing ICU_BUILD_VERSION")
 endif()
-string(REPLACE "." "_" ICU_URL_VERSION ${ICU_BUILD_VERSION})
-set(ICU_URL https://mirror.viaduck.org/icu/icu4c-${ICU_URL_VERSION}-src.tgz)
+set(ICU_URL https://mirror.viaduck.org/icu/icu4c-${ICU_BUILD_VERSION}-sources.tgz)
 
 if (ICU_BUILD_HASH)
     set(ICU_CHECK_HASH EXPECTED_HASH SHA256=${ICU_BUILD_HASH})
@@ -110,8 +109,7 @@ ExternalProject_Add(
         icu_host
         SOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/icu
         BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/icu_host-build
-        PATCH_COMMAND ${PATCH_PROGRAM} -p1 --forward -r - < ${CMAKE_CURRENT_SOURCE_DIR}/patches/0010-fix-pkgdata-suffix.patch || true
-        COMMAND ${PATCH_PROGRAM} -p1 --forward -r - < ${CMAKE_CURRENT_SOURCE_DIR}/patches/0023-remove-soname-version.patch || true
+        PATCH_COMMAND ${PATCH_PROGRAM} -p1 --forward -r - < ${CMAKE_CURRENT_SOURCE_DIR}/patches/0023-remove-soname-version.patch || true
         CONFIGURE_COMMAND ${HOST_ENV_CMAKE} <SOURCE_DIR>/source/configure --prefix=${CMAKE_CURRENT_BINARY_DIR}/icu_host --libdir=${CMAKE_CURRENT_BINARY_DIR}/icu_host/lib/ ${HOST_CFG}
         BUILD_COMMAND ${HOST_ENV_CMAKE} ${MAKE_PROGRAM} -j ${NUM_JOBS}
         BUILD_BYPRODUCTS ${ICU_LIBRARY_FILES}
